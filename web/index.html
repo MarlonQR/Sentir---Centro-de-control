@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Módulo SENTIR: necesidades de las personas afectadas y recursos disponibles.">
+    <title>SENTIR · Dashboard SOA</title>
+    
+    <!-- FONT AWESOME CDN (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN / HEADER -->
+    <header class="encabezado">
+        <div class="header-contenido">
+            <div class="marca">
+                <span class="logo-icono"><i class="fa-solid fa-truck-fast"></i></span>
+                <div>
+                    <h1>SENTIR · Centro de Control</h1>
+                    <p>Gestión Operativa de Necesidades y Recursos (SOA)</p>
+                </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL DASHBOARD -->
+    <main class="contenido-principal">
+
+        <!-- MENSAJE DE NOTIFICACIÓN -->
+        <div id="mensaje" class="mensaje" role="status" aria-live="polite"></div>
+
+        <!-- GRID DE 2 COLUMNAS -->
+        <div class="dashboard-grid">
+
+            <!-- COLUMNA IZQUIERDA (OPERACIONES PRINCIPALES) -->
+            <div class="columna-principal">
+                
+                <!-- ================= PANEL NECESIDADES ================= -->
+                <section class="panel">
+                    <div class="titulo-seccion">
+                        <div class="titulo-con-icono">
+                            <i class="fa-solid fa-clipboard-list icono-modulo"></i>
+                            <div>
+                                <h2>Necesidades Reportadas</h2>
+                                <p>Registro de solicitudes de apoyo de los afectados</p>
+                            </div>
+                        </div>
+                        <button id="btn-actualizar-necesidades" type="button">
+                            <i class="fa-solid fa-rotate-right"></i> Actualizar
+                        </button>
+                    </div>
+
+                    <form id="form-necesidad" class="formulario">
+                        <label>Persona (ID)
+                            <input type="number" name="id_persona" min="1" placeholder="Ej. 101" required>
+                        </label>
+                        <label>Tipo de recurso
+                            <input type="text" name="tipo_recurso" placeholder="agua, alimentos..." maxlength="50" required>
+                        </label>
+                        <label>Cantidad
+                            <input type="number" name="cantidad" min="1" placeholder="Cant." required>
+                        </label>
+                        <label>Prioridad
+                            <select name="prioridad">
+                                <option value="alta">Alta</option>
+                                <option value="media" selected>Media</option>
+                                <option value="baja">Baja</option>
+                            </select>
+                        </label>
+                        <button type="submit">
+                            <i class="fa-solid fa-plus"></i> Registrar
+                        </button>
+                    </form>
+
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Persona</th>
+                                    <th>Recurso</th>
+                                    <th>Cantidad</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-necesidades">
+                                <tr><td colspan="7">Cargando necesidades...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ================= PANEL RECURSOS ================= -->
+                <section class="panel">
+                    <div class="titulo-seccion">
+                        <div class="titulo-con-icono">
+                            <i class="fa-solid fa-boxes-stacked icono-modulo"></i>
+                            <div>
+                                <h2>Inventario de Recursos</h2>
+                                <p>Catálogo y stock de suministros disponibles</p>
+                            </div>
+                        </div>
+                        <button id="btn-actualizar-recursos" type="button">
+                            <i class="fa-solid fa-rotate-right"></i> Actualizar
+                        </button>
+                    </div>
+
+                    <form id="form-recurso" class="formulario">
+                        <label>Tipo
+                            <input type="text" name="tipo" placeholder="agua, cobijas..." maxlength="50" required>
+                        </label>
+                        <label>Nombre
+                            <input type="text" name="nombre" placeholder="Botellones 20L" maxlength="100" required>
+                        </label>
+                        <label>Disponible
+                            <input type="number" name="cantidad_disponible" min="0" placeholder="Stock" required>
+                        </label>
+                        <button type="submit">
+                            <i class="fa-solid fa-plus"></i> Guardar
+                        </button>
+                    </form>
+
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Nombre</th>
+                                    <th>Disponible</th>
+                                    <th>Actualizado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-recursos">
+                                <tr><td colspan="5">Cargando recursos...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- COLUMNA DERECHA (SIDEBAR / DETALLE FLOTANTE) -->
+            <aside class="columna-lateral">
+                
+                <!-- ================= PANEL DISPONIBILIDAD ================= -->
+                <section class="panel panel-destacado">
+                    <div class="titulo-seccion">
+                        <div class="titulo-con-icono">
+                            <i class="fa-solid fa-magnifying-glass icono-modulo"></i>
+                            <div>
+                                <h2>Verificación de Stock</h2>
+                                <p>Consulta cruzada SOA en tiempo real</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detalle-disponibilidad" class="detalle" aria-live="polite">
+                        <div class="estado-vacio">
+                            <i class="fa-solid fa-hand-pointer icono-vacio"></i>
+                            <p>Selecciona <strong>"Ver disponibilidad"</strong> en la tabla de necesidades para auditar el inventario.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CARD INFORMATIVA DEL SISTEMA
+                <section class="panel panel-info">
+                    <h3><i class="fa-solid fa-lightbulb"></i> Información del Módulo</h3>
+                    <ul class="lista-info">
+                        <li><strong>Arquitectura:</strong> Microservicios desacoplados (FastAPI).</li>
+                        <li><strong>Base de Datos:</strong> PostgreSQL en Supabase Cloud.</li>
+                        <li><strong>Integridad:</strong> La consulta de necesidades no afecta el inventario.</li>
+                    </ul>
+                </section> -->
+
+            </aside>
+
+        </div>
+    </main>
+
+    <footer class="pie-pagina">
+        <p><strong>Módulo SENTIR</strong> · Arquitectura Orientada a Servicios (SOA)</p>
+        <p>Desarrollado por <span>MARLON QUINTERO</span></p>
+    </footer>
+
+</body>
+</html>
