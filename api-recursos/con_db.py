@@ -1,8 +1,14 @@
 import os
 import psycopg2
 
+# La cadena de conexion NUNCA va en el codigo: se lee de una variable de entorno.
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "Falta la variable de entorno DATABASE_URL "
+        "(ej. postgresql://usuario:clave@host:puerto/base)"
+    )
+
+
 def obtener_conexion():
-    default_db_url = "postgresql://postgres.eqwbqrnocrixypzbzrli:cgY2CXj5rYUHzCJp@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
-    
-    db_url = os.getenv("DATABASE_URL", default_db_url)
-    return psycopg2.connect(db_url)
+    return psycopg2.connect(DATABASE_URL)
